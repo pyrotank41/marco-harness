@@ -1,6 +1,6 @@
 {
   "name": "marco-harness",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Model-Agnostic Runtime for Controlled Orchestration — a small, readable AI agent harness.",
   "type": "module",
   "main": "./dist/index.js",
@@ -53,10 +53,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pyrotank41/MARCO.git"
+    "url": "git+https://github.com/pyrotank41/marco-harness.git"
   },
   "bugs": {
-    "url": "https://github.com/pyrotank41/MARCO/issues"
+    "url": "https://github.com/pyrotank41/marco-harness/issues"
   },
-  "homepage": "https://github.com/pyrotank41/MARCO#readme"
+  "homepage": "https://github.com/pyrotank41/marco-harness#readme"
 }
