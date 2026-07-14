@@ -66,6 +66,26 @@ describe('runInnerLoop', () => {
     expect(result.iterations).toBe(1)
   })
 
+  it('returns truncated when the model stops on max_tokens', async () => {
+    const clipped: AssistantMessage = {
+      role: 'assistant', text: 'partial answ', toolCalls: [],
+      stopReason: 'max_tokens', usage: { inputTokens: 1, outputTokens: 1 },
+    }
+    const provider = new MockProvider([[{ type: 'message_end', message: clipped }]])
+    const result = await runInnerLoop({
+      runId: 'r-trunc',
+      messages: [{ role: 'user', text: 'hi' }],
+      provider,
+      toolSpecs: [],
+      requestToolCall: noExecutor,
+      hooks: {},
+      modelConfig: { model: 'mock' },
+    })
+    expect(result.status).toBe('truncated')
+    expect(result.finalMessage).toEqual(clipped)
+    expect(result.iterations).toBe(1)
+  })
+
   it('delegates tool calls to requestToolCall and feeds results back until end_turn', async () => {
     const turn1: AssistantMessage = {
       role: 'assistant', text: '', toolCalls: [

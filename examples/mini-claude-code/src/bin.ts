@@ -133,6 +133,8 @@ async function main(): Promise<void> {
         stdout.write(`\n[error] ${error.message}\n\n`)
       } else if (status === 'aborted') {
         stdout.write(`\n[aborted]\n\n`)
+      } else if (status === 'truncated') {
+        stdout.write(`\n[truncated] response hit the output-token limit\n\n`)
       }
     },
   }

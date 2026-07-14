@@ -69,7 +69,7 @@ export type AfterToolResultOutput = {
 
 export type OnRunEndInput = {
   runId: string
-  status: 'completed' | 'aborted' | 'errored'
+  status: 'completed' | 'truncated' | 'aborted' | 'errored'
   finalMessage?: AssistantMessage
   messages: Message[]
   error?: Error
