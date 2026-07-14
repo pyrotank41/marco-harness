@@ -94,6 +94,27 @@ describe('Harness', () => {
     expect(captured?.iterations).toBe(1)
   })
 
+  it('invokes onRunEnd with truncated when the model stops on max_tokens', async () => {
+    const clipped: AssistantMessage = {
+      role: 'assistant', text: 'partial', toolCalls: [],
+      stopReason: 'max_tokens', usage: { inputTokens: 1, outputTokens: 1 },
+    }
+    let captured: { status: string } | undefined
+    const hooks: Hooks = {
+      onRunEnd: async ({ status }) => {
+        captured = { status }
+      },
+    }
+    const harness = new Harness({
+      provider: new MockProvider([[{ type: 'message_end', message: clipped }]]),
+      modelConfig: { model: 'mock' },
+      hooks,
+    })
+    const result = await harness.run({ kind: 'user_message', text: 'x' })
+    expect(result.status).toBe('truncated')
+    expect(captured?.status).toBe('truncated')
+  })
+
   it('supports registering tools', async () => {
     const endMsg: AssistantMessage = {
       role: 'assistant', text: 'done', toolCalls: [],

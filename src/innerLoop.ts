@@ -39,7 +39,7 @@ export type RunInnerLoopInput = {
 }
 
 export type RunInnerLoopResult = {
-  status: 'completed' | 'aborted' | 'errored'
+  status: 'completed' | 'truncated' | 'aborted' | 'errored'
   finalMessage?: AssistantMessage
   messages: Message[]
   iterations: number
@@ -99,8 +99,13 @@ export async function runInnerLoop(input: RunInnerLoopInput): Promise<RunInnerLo
       // Phase 3 — route on stop reason
       switch (assistantMessage.stopReason) {
         case 'end_turn':
-        case 'max_tokens':
           return { status: 'completed', finalMessage: assistantMessage, messages, iterations: iteration }
+
+        // The model was cut off by the output-token limit, not finished.
+        // A distinct status lets the caller tell a clipped answer from a
+        // complete one instead of silently reporting success.
+        case 'max_tokens':
+          return { status: 'truncated', finalMessage: assistantMessage, messages, iterations: iteration }
 
         case 'error':
         case 'safety':
